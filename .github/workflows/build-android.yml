@@ -17,9 +17,7 @@ jobs:
           node-version: '18'
           
       - name: Install dependencies
-        run: |
-          npm install
-          npm install -g react-native-cli
+        run: npm install
           
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -49,7 +47,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ProjectTracker/android/app/build/outputs/apk/release/app-release.apk
+          files: android/app/build/outputs/apk/release/app-release.apk
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
         env:
