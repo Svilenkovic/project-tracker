@@ -26,7 +26,9 @@ jobs:
         run: npm install -g eas-cli
         
       - name: Login to Expo
-        run: eas login --non-interactive
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${EXPO_TOKEN}" > .npmrc
+          eas login --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           
