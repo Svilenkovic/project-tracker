@@ -19,35 +19,37 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          npm install -g eas-cli
+          npm install -g react-native-cli
           
-      - name: Login to Expo
-        run: eas login --non-interactive
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
           
-      - name: Configure EAS
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+          
+      - name: Setup Android environment variables
         run: |
-          echo '{
-            "cli": {
-              "version": ">= 5.9.1"
-            },
-            "build": {
-              "preview": {
-                "android": {
-                  "buildType": "apk"
-                }
-              }
-            }
-          }' > eas.json
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "$ANDROID_SDK_ROOT/platform-tools" >> $GITHUB_PATH
+          
+      - name: Generate Android project
+        run: |
+          npx react-native init ProjectTracker --template react-native-template-typescript
+          cp -r android/* ProjectTracker/android/
+          cd ProjectTracker
           
       - name: Build APK
-        run: eas build -p android --profile preview --non-interactive --local
+        run: |
+          cd android
+          ./gradlew assembleRelease
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: android/app/build/outputs/apk/release/app-release.apk
+          files: ProjectTracker/android/app/build/outputs/apk/release/app-release.apk
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
         env:
