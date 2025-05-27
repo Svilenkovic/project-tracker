@@ -19,24 +19,30 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          npm install -g expo-cli
+          npm install -g eas-cli
           
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Login to Expo
+        run: eas login --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-          
-      - name: Prebuild
-        run: npx expo prebuild -p android
+      - name: Configure EAS
+        run: |
+          echo '{
+            "cli": {
+              "version": ">= 5.9.1"
+            },
+            "build": {
+              "preview": {
+                "android": {
+                  "buildType": "apk"
+                }
+              }
+            }
+          }' > eas.json
           
       - name: Build APK
-        run: |
-          cd android
-          ./gradlew assembleRelease
+        run: eas build -p android --profile preview --non-interactive --local
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
