@@ -21,9 +21,22 @@ jobs:
           npm install
           npm install -g expo-cli
           
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+          
+      - name: Prebuild
+        run: npx expo prebuild -p android
+          
       - name: Build APK
         run: |
-          expo build:android -t apk
+          cd android
+          ./gradlew assembleRelease
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
