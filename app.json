@@ -23,6 +23,12 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.projecttracker.app"
+    },
+    "sdkVersion": "53.0.9",
+    "extra": {
+      "eas": {
+        "projectId": "45e1ece2-0ebb-4628-9523-28cae72e6945"
+      }
     }
   }
-} 
+}

@@ -1,0 +1,61 @@
+name: Build Android APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+        
+      - name: Login to Expo
+        run: eas login --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          
+      - name: Build APK
+        run: eas build -p android --profile preview --non-interactive --no-wait
+        
+      - name: Wait for build
+        run: |
+          BUILD_ID=$(eas build:list --json | jq -r '.[0].id')
+          while true; do
+            STATUS=$(eas build:view $BUILD_ID --json | jq -r '.status')
+            if [ "$STATUS" = "finished" ]; then
+              break
+            elif [ "$STATUS" = "error" ]; then
+              echo "Build failed"
+              exit 1
+            fi
+            echo "Waiting for build to complete..."
+            sleep 30
+          done
+          
+      - name: Download APK
+        run: |
+          BUILD_ID=$(eas build:list --json | jq -r '.[0].id')
+          DOWNLOAD_URL=$(eas build:view $BUILD_ID --json | jq -r '.artifacts.url')
+          curl -L -o app.apk "$DOWNLOAD_URL"
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: app.apk
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

@@ -1,6 +1,6 @@
-# Aplikacija za Praćenje Projekata
+# Project Tracker
 
-Jednostavna Android aplikacija za praćenje projekata, njihovog statusa i napretka.
+Aplikacija za praćenje projekata.
 
 ## Funkcionalnosti
 
@@ -12,21 +12,40 @@ Jednostavna Android aplikacija za praćenje projekata, njihovog statusa i napret
 
 ## Instalacija
 
-1. Instalirajte Node.js sa [zvaničnog sajta](https://nodejs.org/)
-2. Instalirajte Android Studio sa [zvaničnog sajta](https://developer.android.com/studio)
-3. Instalirajte React Native CLI:
-   ```bash
-   npm install -g react-native-cli
-   ```
-4. Klonirajte repozitorijum
-5. Instalirajte zavisnosti:
-   ```bash
-   npm install
-   ```
-6. Pokrenite aplikaciju:
-   ```bash
-   npm run android
-   ```
+### Android
+
+1. Idite na [Releases](https://github.com/Svilenkovic/project-tracker/releases) stranicu
+2. Preuzmite najnoviji APK fajl
+3. Na vašem Android uređaju:
+   - Idite u Podešavanja > Bezbednost
+   - Uključite "Instalacija iz nepoznatih izvora"
+   - Pronađite preuzeti APK fajl i tapnite na njega da pokrenete instalaciju
+
+## Razvoj
+
+Ako želite da razvijate aplikaciju:
+
+1. Klonirajte repozitorijum:
+```bash
+git clone https://github.com/Svilenkovic/project-tracker.git
+```
+
+2. Instalirajte zavisnosti:
+```bash
+npm install
+```
+
+3. Pokrenite aplikaciju:
+```bash
+npm start
+```
+
+## Tehnologije
+
+- React Native
+- Expo
+- React Navigation
+- AsyncStorage
 
 ## Generisanje APK fajla
 
